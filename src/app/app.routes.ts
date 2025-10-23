@@ -1,33 +1,37 @@
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
-    {
-        path: 'dashboard',
+  {
+    path: 'dashboard',
+    loadComponent: () =>
+      import('./gifs/pages/dashboard-page/dashboard-page-component/dashboard-page-component'),
+    children: [
+      {
+        path: 'trending',
         loadComponent: () =>
-            import('./gifs/pages/dashboard-page/dashboard-page-component/dashboard-page-component'),
+          import('./gifs/pages/trending-page/trending-page.component'),
+      },
+      {
+        path: 'search',
+        loadComponent: () =>
+          import('./gifs/pages/estudiantepage/search-page-component/search-page.component'),
         children: [
-            {
-                path: 'trending',
-                loadComponent: () =>
-                    import('./gifs/pages/trending-page/trending-page-component/trending-page-component'),
-            },
-
-            {
-                path: 'search',
-                loadComponent: () =>
-                    import('./gifs/pages/search-page/search-page-component/search-page-component'),
-            },
-            {
-                path: '**',
-                redirectTo: 'trending'
-            },
+          {
+            path: 'estudiante',
+            loadComponent: () =>
+              import('./gifs/pages/estudiantepage/search-page-component/estudiante-component/estudiante.component')
+                .then(m => m.EstudianteComponent),
+          }
         ]
-    },
-
-
-
-    {
+      },
+      {
         path: '**',
-        redirectTo: 'dashboard',
-    },
+        redirectTo: 'trending'
+      },
+    ]
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard',
+  },
 ];

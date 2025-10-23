@@ -1,0 +1,41 @@
+ul li {
+    list-style: none;
+}
+
+.alinear {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 40px;
+   font-weight: 40px;
+}
+
+.right {
+    margin-left: auto;
+}
+
+mat-form-field {
+    width: 100%
+}
+
+.mat-cell:nth-chield(1),
+.mat-header-cell:nth-child(1){
+    flex: 0 0 6%;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .card {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+
+  .soft-orange-card {
+background: linear-gradient(145deg, #81acc0ff, #1d74f5ff);
+  color: #0a0302ff;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(12, 12, 11, 0.25);
+}
