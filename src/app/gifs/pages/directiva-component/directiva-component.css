@@ -1,0 +1,29 @@
+.summary-card {
+  background-color: #f9fafb;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.chartContainer {
+  height: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartContainer canvas {
+  max-height: 280px;
+  width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+  .chartContainer {
+    width: 90%;
+    margin: 0 auto;
+  }
+}

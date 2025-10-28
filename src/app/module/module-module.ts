@@ -15,7 +15,7 @@ import TrendingPageComponent from '../gifs/pages/trending-page/trending-page.com
 
   ],
  imports: [
-    CommonModule,
+    CommonModule, 
   
   ]
 })

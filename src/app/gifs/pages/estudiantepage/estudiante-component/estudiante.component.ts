@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { MaterialModule } from '../../../../../module/material/material-module';
+import { MaterialModule } from '../../../../module/material/material-module';
 
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -12,11 +12,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { EstudianteService } from '../../../services/estudiante-service';
 
 
 @Component({
   selector: 'app-estudiante-component',
-    standalone: true,
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -35,20 +36,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrl: './estudiante.component.css'
 })
 export class EstudianteComponent implements OnInit {
-
+  private productService = inject(EstudianteService);
 
   selectedFile: any;
   nameImg: string = "";
   public productForm!: FormGroup;
   estadoFormulario: string = "";
   private fb = inject(FormBuilder);
- 
+
   private dialogRef = inject(MatDialogRef);
   public data = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
     this.estadoFormulario = "Agregar";
-    this.getCategories();
     this.getForm();
 
 
@@ -59,10 +59,7 @@ export class EstudianteComponent implements OnInit {
 
   }
 
-  getCategories() {
-
-  }
-
+  
 
   onCancel() {
     this.dialogRef.close(3);
@@ -70,32 +67,68 @@ export class EstudianteComponent implements OnInit {
 
   getForm() {
     this.productForm = this.fb.group({
-      name: ['', Validators.required],
-      price: ['', Validators.required],
-      account: ['', Validators.required],
-      category: ['', Validators.required],
-      picture: ['', Validators.required]
+      nombre: ['', Validators.required],
+      primerApellido: ['', Validators.required],
+      segundoApellido: ['', Validators.required],
+      telefono: ['', Validators.required],
+      direccion: ['', Validators.required],
+      correo: ['', Validators.required],
+      pae: null,
     });
   }
 
-  onSave() {
-    
+ onSave() {
+  const data = {
+    nombre: this.productForm.get('nombre')?.value,
+    primerApellido: this.productForm.get('primerApellido')?.value,
+    segundoApellido: this.productForm.get('segundoApellido')?.value,
+    telefono: this.productForm.get('telefono')?.value,
+    direccion: this.productForm.get('direccion')?.value,
+    correo: this.productForm.get('correo')?.value,
+    pae: this.productForm.get('pae')?.value,
+  };
 
+  console.log("📤 Enviando JSON:", data);
 
+  if (this.data) {
+    this.productService.updateProduct(data, this.data.id).subscribe({
+      next: () => this.dialogRef.close(1),
+      error: (err) => {
+        console.error("❌ Error al actualizar:", err);
+        this.dialogRef.close(2);
+      }
+    });
+  } else {
+    this.productService.saveProducts(data).subscribe({
+      next: (res) => {
+        console.log("✅ Guardado con éxito:", res);
+        this.dialogRef.close(1);
+      },
+      error: (err) => {
+        console.error("❌ Error al guardar:", err);
+        this.dialogRef.close(2);
+      }
+    });
   }
+}
+
 
   onFileChanged(event: any) {
     this.selectedFile = event.target.files[0];
     this.nameImg = this.selectedFile.name;
   }
 
+   
+
   updateForm(data: any) {
     this.productForm = this.fb.group({
-      name: [data.name, Validators.required],
-      price: [data.price, Validators.required],
-      account: [data.account, Validators.required],
-      category: [data.category.id, Validators.required],
-      picture: ["", Validators.required]
+      nombre: [data.nombre, Validators.required],
+      primerApellido: [data.primerApellido, Validators.required],
+      segundoApellido: [data.segundoApellido, Validators.required],
+      telefono: [data.telefono, Validators.required],
+      direccion: [data.direccion, Validators.required],
+      correo: [data.correo, Validators.required],
+       pae: [null],
     });
   }
 

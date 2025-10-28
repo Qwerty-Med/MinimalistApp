@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MaterialModule } from '../../../../module/material/material-module';
+import { MaterialModule } from '../../../module/material/material-module';
 import { MatSnackBar, MatSnackBarModule, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -11,22 +11,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { ConfirmComponent } from '../../../componets/confirm/confirm.component';
-import { EstudianteService } from '../../../services/estudiante-service';
+import { ConfirmComponent } from '../../componets/confirm/confirm.component';
+import { EstudianteService } from '../../services/estudiante-service';
 import { EstudianteComponent } from './estudiante-component/estudiante.component';
+import { Estudiante } from '../../interfaces/Estudiante';
 
-interface Product {
-    id: number;
-    name: string;
-    price: number;
-    account: number;
-    picture: string;
- 
-}
+
+
 
 @Component({
   selector: 'app-search-page-component',
-     standalone: true,
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -40,14 +35,16 @@ interface Product {
     MatButtonModule,
     MatCardModule,
     MatSnackBarModule,
-    
+    MatIconModule
+
   ],
   templateUrl: './search-page.component.html',
   styleUrl: './search-page.component.css'
 })
-export default class  SearchPageComponent implements OnInit {
+export default class SearchPageComponent implements OnInit {
 
-  listProducts: Product[] = [];
+ 
+  listaEstudiante: Estudiante[] = [];
 
   private productService = inject(EstudianteService);
   private snackBar = inject(MatSnackBar);
@@ -59,38 +56,37 @@ export default class  SearchPageComponent implements OnInit {
     this.getProducts();
   }
 
-  displayedColumns: string[] = ['id', 'name', 'price', 'account', 'category', 'picture', 'actions'];
-  dataSource = new MatTableDataSource<ProductElement>
+  displayedColumns: string[] = ['id', 'nombre', 'primerApellido', 'segundoApellido', 'telefono', 'correo', 'direccion', 'pae', 'picture', 'actions'];
+  dataSource = new MatTableDataSource<Estudiante>
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
   getProducts() {
     this.productService.getProducts().subscribe((data: any) => {
-
       this.processCategoriesResponse(data);
     }, (error: any) => {
       console.log("error in products: ", error);
     })
   }
 
+
   processCategoriesResponse(resp: any) {
-    const dataProduct: ProductElement[] = [];
-    if (resp.metadata[0].code == "00") {
-      let listCProduct = resp.product.products;
+    const dataEstudent: Estudiante[] = [];
+    let listEstudent = resp;
 
-      listCProduct.forEach((element: ProductElement) => {
-        //element.category = element.category.name;
-        element.picture = element.picture ? 'data:image/jpeg;base64,' + element.picture : '';
-        dataProduct.push(element);
-      });
+    listEstudent.forEach((element: Estudiante) => {
+      //element.category = element.category.name;
+      // element.picture = element.picture ? 'data:image/jpeg;base64,' + element.picture : '';
+      dataEstudent.push(element);
+    });
 
-      this.listProducts = dataProduct;
+    this.listaEstudiante = dataEstudent;
 
-      //set the datasource
-      this.dataSource = new MatTableDataSource<ProductElement>(dataProduct);
-      this.dataSource.paginator = this.paginator;
-    }
+    //set the datasource
+    this.dataSource = new MatTableDataSource<Estudiante>(dataEstudent);
+    this.dataSource.paginator = this.paginator;
+
   }
 
 
@@ -117,24 +113,40 @@ export default class  SearchPageComponent implements OnInit {
   }
 
 
-  edit(id: number, name: string, price: number, account: number, category: any) {
-
+  edit(
+    id: number,
+    nombre: string,
+    primerApellido: string,
+    segundoApellido: string,
+    telefono: number,
+    correo: string,
+    direccion: string,
+    pae: null,
+  ) {
     const dialogRef = this.dialog.open(EstudianteComponent, {
       width: '450px',
-      data: { id: id, name: name, price: price, account: account, category: category }
+      data: {
+        id: id,
+        nombre: nombre,
+        primerApellido: primerApellido,
+        segundoApellido: segundoApellido,
+        telefono: telefono,
+        correo: correo,
+        direccion: direccion,
+        pae: pae,
+      }
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
-
-      if (result == 1) {
-        this.openSnackBar("Producto Actualizada", "Exitosa");
-        this.getProducts();
-      } else if (result == 2) {
-        this.openSnackBar("Se produjo un error al actualizar la producto", "Error");
+      if (result === 1) {
+        this.openSnackBar("Estudiante actualizado exitosamente", "Éxito");
+        this.getProducts(); // 🔸 puedes renombrar a getEstudiantes() si corresponde
+      } else if (result === 2) {
+        this.openSnackBar("Se produjo un error al actualizar el estudiante", "Error");
       }
-
     });
   }
+
 
 
   buscar(termino: string) {
@@ -144,34 +156,34 @@ export default class  SearchPageComponent implements OnInit {
     if (termino.length === 0) {
       return this.getProducts();
     }
-    this.productService.getProductsByName(termino).subscribe((data: any) =>{
-      
+    this.productService.getProductsByName(termino).subscribe((data: any) => {
+
       this.processCategoriesResponse(data);
       console.log('this is resp', data)
     })
   }
-  
- delete(id: number) {
- 
-   const dialogRef = this.dialog.open(ConfirmComponent, {
-     width: '450px',
-     data: { id: id, module: "product" }
-   });
- 
-   dialogRef.afterClosed().subscribe((result: any) => {
- 
-     if (result == 1) {
-       this.openSnackBar("Product Eliminado", "Exitoso");
-       this.getProducts();
-     } else if (result == 2) {
-       this.openSnackBar("Se produjo un error al eliminar la Product", "Error");
-     }
- 
-   });
- }
- 
 
- 
+  delete(id: number) {
+
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      width: '450px',
+      data: { id: id, module: "product" }
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+
+      if (result == 1) {
+        this.openSnackBar("Product Eliminado", "Exitoso");
+        this.getProducts();
+      } else if (result == 2) {
+        this.openSnackBar("Se produjo un error al eliminar la Product", "Error");
+      }
+
+    });
+  }
+
+
+
 
 
   openSnackBar(message: string, action: string): MatSnackBarRef<SimpleSnackBar> {
@@ -188,12 +200,3 @@ export default class  SearchPageComponent implements OnInit {
 
 
 
-export interface ProductElement {
-  id: number;
-  name: string;
-  price: number;
-  account: number;
-  category: any;
-  picture: any;
-
-}

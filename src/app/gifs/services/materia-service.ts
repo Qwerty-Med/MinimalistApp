@@ -1,21 +1,23 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Materia } from '../interfaces/Materia';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Estudiante } from '../interfaces/Estudiante';
+
 const base_url = "http://localhost:8080/v1";
 @Injectable({
   providedIn: 'root'
 })
-export class EstudianteService {
-
+export class MateriaService {
+  
   constructor(private http: HttpClient) { }
 
   /**
    * get the products
    */
-getProducts(): Observable<Estudiante[]> {
-  const endpoint = `${base_url}/estudiantes`;
-  return this.http.get<Estudiante[]>(endpoint);
+getProducts(): Observable<Materia[]> {
+  const endpoint = `${base_url}/materias`;
+  return this.http.get<Materia[]>(endpoint);
 }
 
  /**
@@ -23,7 +25,7 @@ getProducts(): Observable<Estudiante[]> {
  */
 
 saveProducts(body: any): Observable<any> {
-   const endpoint = `${base_url}/estudiantes/create`;
+   const endpoint = `${base_url}/materias/create`;
   return this.http.post(endpoint, body)
 }
 
@@ -31,8 +33,7 @@ saveProducts(body: any): Observable<any> {
  * update  products
  */
 updateProduct(body: any, id:any){
-  const endpoint = `${base_url}/estudiantes/update/${id}`;
-  console.log("fmgnbjfvbldl",endpoint)
+  const endpoint = `${base_url}/materias/update/${id}`;
   return this.http.put(endpoint, body);
 }
 
@@ -41,7 +42,7 @@ updateProduct(body: any, id:any){
  * delete  products
  */
 deleteProduct(id:any){
-  const endpoint = `${base_url}/estudiantes/${id}`;
+  const endpoint = `${base_url}/materias/${id}`;
   return this.http.delete(endpoint);
 }
 
@@ -49,7 +50,7 @@ deleteProduct(id:any){
  * get by id  products
  */
  getProductsById(id:any){
-  const endpoint = `${base_url}/estudiantes/ ${id}`;
+  const endpoint = `${base_url}/materias/ ${id}`;
   return this.http.delete(endpoint);
 }
 
@@ -57,9 +58,8 @@ deleteProduct(id:any){
  * get by name  products
  */
  getProductsByName(name:any){
-  const endpoint = `${base_url}/estudiantes/for/${name}`;
+  const endpoint = `${base_url}/materias/for/${name}`;
   return this.http.get(endpoint);
 }
-
-
+  
 }

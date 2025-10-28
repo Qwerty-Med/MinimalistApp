@@ -1,3 +1,43 @@
-table {
+.grafico {
+  text-align: center;
+  margin-top: 4px;
+}
+
+.chartContainer {
+  height: 18rem;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.chartContainer:hover {
+  transform: translateY(-4px);
+}
+
+.chartContainer canvas {
+  max-height: 220px;
+  width: 100%;
+  height: auto;
+}
+
+/* Para mantener los gráficos bien distribuidos en pantallas grandes */
+.row {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+/* Responsivo: en pantallas pequeñas los gráficos se apilan verticalmente */
+@media (max-width: 768px) {
+  .chartContainer {
+    width: 90%;
+    margin: 0 auto 1rem;
+  }
 }
