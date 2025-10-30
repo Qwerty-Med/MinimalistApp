@@ -41,6 +41,9 @@ updateProduct(body: any, id:any){
 /**
  * delete  products
  */
+/**
+ * delete  products
+ */
 deleteProduct(id:any){
   const endpoint = `${base_url}/estudiantes/${id}`;
   return this.http.delete(endpoint);
