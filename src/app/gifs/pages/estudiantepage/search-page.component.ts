@@ -57,7 +57,7 @@ export default class SearchPageComponent implements OnInit {
     this.getProducts();
   }
 
-  displayedColumns: string[] = ['id', 'nombre', 'primerApellido', 'segundoApellido', 'telefono', 'correo', 'direccion', 'pae', 'materias', 'actions'];
+  displayedColumns: string[] = ['id', 'nombre', 'primerApellido', 'segundoApellido', 'telefono', 'correo', 'direccion',  'materias','pae', 'actions'];
   dataSource = new MatTableDataSource<Estudiante>
 
   @ViewChild(MatPaginator)
@@ -138,7 +138,11 @@ export default class SearchPageComponent implements OnInit {
         materias: materias,
         pae: pae,
       }
+      
+      
     });
+
+ 
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result === 1) {

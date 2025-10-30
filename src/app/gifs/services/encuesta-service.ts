@@ -57,7 +57,7 @@ deleteProduct(id:any){
  * get by name  products
  */
  getProductsByName(name:any){
-  const endpoint = `${base_url}/encuestas/for/${name}`;
+  const endpoint = `${base_url}/encuestas/term/${name}`;
   return this.http.get(endpoint);
 }
 

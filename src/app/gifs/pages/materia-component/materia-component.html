@@ -57,11 +57,7 @@
                 <td mat-cell *matCellDef="let element"> {{element.evaluaciones}}</td>
             </ng-container>
 
-            <!-- account-->
-            <ng-container matColumnDef="directiva">
-                <th mat-header-cell *matHeaderCellDef>Directiva</th>
-                <td mat-cell *matCellDef="let element"> {{element.directiva}}</td>
-            </ng-container>
+           
 
     
 
@@ -80,8 +76,7 @@
           element.nombre,
           element.profesor,
           element.estudiante,
-          element.evaluaciones,
-          element.directiva       
+          element.evaluaciones   
         )"
       >
         Editar

@@ -65,7 +65,7 @@ export class EditComponent implements OnInit {
 
   getForm() {
     this.productForm = this.fb.group({
-      tipo: ['', Validators.required],
+      nombre: ['', Validators.required],
       nota: ['', Validators.required],
       materia: ['', Validators.required],
       estudiante: ['', Validators.required],
@@ -74,7 +74,7 @@ export class EditComponent implements OnInit {
 
  onSave() {
   const data = {
-    tipo: this.productForm.get('tipo')?.value,
+    nombre: this.productForm.get('nombre')?.value,
     nota: this.productForm.get('nota')?.value,
     materia: this.productForm.get('materia')?.value, 
     estudiante: this.productForm.get('estudiante')?.value,
@@ -114,7 +114,7 @@ export class EditComponent implements OnInit {
 
   updateForm(data: any) {
     this.productForm = this.fb.group({
-      tipo: [data.tipo, Validators.required],
+      nombre: [data.nombre, Validators.required],
       nota: [data.nota, Validators.required],
       materia: [data.materia, Validators.required],
       estudiante: [data.estudiante, Validators.required],

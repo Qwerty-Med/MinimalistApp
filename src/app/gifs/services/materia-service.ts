@@ -33,8 +33,11 @@ saveProducts(body: any): Observable<any> {
  * update  products
  */
 updateProduct(body: any, id:any){
+  console.log("ESTOY EN EL SERVICIO", body)
   const endpoint = `${base_url}/materias/update/${id}`;
-  return this.http.put(endpoint, body);
+     return this.http.put(endpoint, body, {
+    headers: { 'Content-Type': 'application/json' }
+  });
 }
 
 
@@ -58,7 +61,7 @@ deleteProduct(id:any){
  * get by name  products
  */
  getProductsByName(name:any){
-  const endpoint = `${base_url}/materias/for/${name}`;
+  const endpoint = `${base_url}/materias/term/${name}`;
   return this.http.get(endpoint);
 }
   

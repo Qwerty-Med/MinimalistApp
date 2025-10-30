@@ -18,6 +18,7 @@ import { EstudianteComponent } from '../estudiantepage/estudiante-component/estu
 import { MateriaService } from '../../services/materia-service';
 import { Materia } from '../../interfaces/Materia';
 import { EditComponent } from './edit-component/edit-component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-materia-component',
@@ -54,7 +55,7 @@ export class MateriaComponent implements OnInit {
     this.getProducts();
   }
 
-  displayedColumns: string[] = ['id', 'nombre', 'profesor', 'estudiante','evaluaciones', 'directiva','actions'];
+  displayedColumns: string[] = ['id', 'nombre', 'profesor', 'estudiante','evaluaciones' ,'actions'];
   dataSource = new MatTableDataSource<Materia>
 
   @ViewChild(MatPaginator)
@@ -62,6 +63,7 @@ export class MateriaComponent implements OnInit {
 
   getProducts() {
     this.productService.getProducts().subscribe((data: any) => {
+      console.log("EVALUACIONES: ", data);
       this.processCategoriesResponse(data);
     }, (error: any) => {
       console.log("error in products: ", error);
@@ -116,8 +118,7 @@ export class MateriaComponent implements OnInit {
     nombre: string,
     profesor: string,
     estudiante: string,
-    evaluaciones: number,
-    directiva: string
+    evaluaciones: string,
   ) {
     const dialogRef = this.dialog.open(EditComponent, {
       width: '450px',
@@ -127,7 +128,6 @@ export class MateriaComponent implements OnInit {
         profesor: profesor,
         estudiante: estudiante,
         evaluaciones: evaluaciones,
-        directiva: directiva,
       }
     });
 
@@ -157,24 +157,43 @@ export class MateriaComponent implements OnInit {
     })
   }
 
-  delete(id: number) {
+delete(id: number): void {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'No podrás revertir esta acción',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          // Mensaje de éxito
+          Swal.fire({
+            title: 'Eliminado',
+            text: 'La Materia fue eliminado correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
 
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: '450px',
-      data: { id: id, module: "product" }
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-
-      if (result == 1) {
-        this.openSnackBar("Product Eliminado", "Exitoso");
-        this.getProducts();
-      } else if (result == 2) {
-        this.openSnackBar("Se produjo un error al eliminar la Product", "Error");
-      }
-
-    });
-  }
+          // Recargar la lista
+          this.getProducts();
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo eliminar la materia.',
+            icon: 'error'
+          });
+        }
+      });
+    }
+  });
+}
 
 
 

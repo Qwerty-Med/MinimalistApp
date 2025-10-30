@@ -1,9 +1,9 @@
 <mat-card class="soft-orange-card">
-    <h1 class="alinear">Listado de Profesores</h1>
+    <h1 class="alinear">Listado de Estudiantes PAE</h1>
     <mat-card-header>
         <div>
-            <mat-form-field hintLabel="Busque productos" appearance="fill">
-                <mat-label>Buscar Profesor</mat-label>
+            <mat-form-field hintLabel="Busque estudiantes" appearance="fill">
+                <mat-label>Buscar Estudiantes PAE</mat-label>
                 <input matInput #input (keyup)="buscar(input.value)">
             </mat-form-field>
         </div>
@@ -13,7 +13,7 @@
         <div class="right p-2">
             <ul>
                 <li>
-                    <button mat-raised-button color="primary" (click)="openProfesorDialog()">Agregar Profesor</button>
+                    <button mat-raised-button color="primary" (click)="openProfesorDialog()">Agregar Estudiantes PAE</button>
                 </li>
             </ul>
         </div>
@@ -33,9 +33,9 @@
             </ng-container>
 
             <!--id name-->
-            <ng-container matColumnDef="estado">
-                <th mat-header-cell *matHeaderCellDef>Estado</th>
-                <td mat-cell *matCellDef="let element"> {{element.estado}}</td>
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>Inscritos  Programa PAE</th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}}</td>
             </ng-container>
 
             <!-- price-->
@@ -56,7 +56,7 @@
         class="btn-editar"
         (click)="edit(
           element.id,
-          element.estado,
+          element.nombre,
           element.estudiante
         )"
       >

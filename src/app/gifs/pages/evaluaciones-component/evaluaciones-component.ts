@@ -18,6 +18,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MaterialModule } from '../../../module/material/material-module';
 import { EditComponent } from './edit-component/edit-component';
 
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-evaluaciones-component',
   imports: [ CommonModule,
@@ -51,7 +53,7 @@ export class EvaluacionesComponent implements OnInit {
     this.getProducts();
   }
 
-  displayedColumns: string[] = ['id', 'tipo', 'materia','nota', 'estudiante', 'actions'];
+  displayedColumns: string[] = ['id', 'tipo', 'nota','materia', 'estudiante', 'actions'];
   dataSource = new MatTableDataSource<Evaluacion>
 
   @ViewChild(MatPaginator)
@@ -110,7 +112,7 @@ export class EvaluacionesComponent implements OnInit {
 
   edit(
     id: number,
-    tipo: string,
+    nombre: string,
     nota: number,
     materia: string,
     estudiante: string,
@@ -119,7 +121,7 @@ export class EvaluacionesComponent implements OnInit {
       width: '450px',
       data: {
         id: id,
-        tipo: tipo,
+        nombre: nombre,
         nota:nota,
         materia: materia,
         estudiante: estudiante,
@@ -152,24 +154,44 @@ export class EvaluacionesComponent implements OnInit {
     })
   }
 
-  delete(id: number) {
-
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: '450px',
-      data: { id: id, module: "product" }
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-
-      if (result == 1) {
-        this.openSnackBar("Evaluacion Eliminada", "Exitoso");
-        this.getProducts();
-      } else if (result == 2) {
-        this.openSnackBar("Se produjo un error al eliminar la Evaluacion", "Error");
-      }
-
-    });
-  }
+  delete(id: number): void {
+     Swal.fire({
+       title: '¿Estás seguro?',
+       text: 'No podrás revertir esta acción',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#3085d6',
+       cancelButtonColor: '#d33',
+       confirmButtonText: 'Sí, eliminar',
+       cancelButtonText: 'Cancelar'
+     }).then((result) => {
+       if (result.isConfirmed) {
+         this.productService.deleteProduct(id).subscribe({
+           next: () => {
+             // Mensaje de éxito
+             Swal.fire({
+               title: 'Eliminado',
+               text: 'La evaluacion fue eliminado correctamente.',
+               icon: 'success',
+               timer: 2000,
+               showConfirmButton: false
+             });
+   
+             // Recargar la lista
+             this.getProducts();
+           },
+           error: () => {
+             Swal.fire({
+               title: 'Error',
+               text: 'No se pudo eliminar la evaluacion.',
+               icon: 'error'
+             });
+           }
+         });
+       }
+     });
+   }
+ 
 
 
 

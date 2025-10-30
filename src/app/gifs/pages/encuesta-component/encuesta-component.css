@@ -1,124 +1,78 @@
-/* ======== CONTENEDOR PRINCIPAL ======== */
-.encuestas-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  gap: 2rem;
-  padding: 2rem 3rem;
-  background: linear-gradient(180deg, #f8f9fb, #e9eef6);
-  min-height: 100vh;
-  box-sizing: border-box;
+ul li {
+    list-style: none;
 }
 
-/* ======== TARJETA ======== */
-.encuesta-card {
-  background: #ffffff;
+.alinear {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 40px;
+   font-weight: 40px;
+}
+
+.right {
+    margin-left: auto;
+}
+
+mat-form-field {
+    width: 100%
+}
+
+.mat-cell:nth-chield(1),
+.mat-header-cell:nth-child(1){
+    flex: 0 0 6%;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .card {
+    width: 100px;
+    margin-bottom: 20px;
+  }
+
+  .soft-orange-card {
+background: linear-gradient(145deg, #81acc0ff, #1d74f5ff);
+  color: #0a0302ff;
   border-radius: 16px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(12, 12, 11, 0.25);
 }
 
-.encuesta-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
-}
-
-/* ======== CABECERA ======== */
-.encuesta-header {
-  background: linear-gradient(135deg, #1e88e5, #64b5f6);
-  color: #ffffff;
-  padding: 1.4rem;
+.mat-column-actions {
+  width: 180px;
   text-align: center;
-  font-size: 1.25rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-  border-bottom: 3px solid #1565c0;
 }
 
-/* ======== CUERPO ======== */
-.encuesta-body {
-  padding: 1.5rem;
-  flex-grow: 1;
-  color: #2c3e50;
-}
-
-.encuesta-body p {
-  margin-bottom: 1rem;
-  line-height: 1.6;
-  font-size: 1rem;
-  color: #37474f;
-}
-
-.encuesta-body .detalle {
-  font-weight: 500;
-  color: #1565c0;
-  margin-top: 0.5rem;
-}
-
-/* ======== PIE DE TARJETA ======== */
-.encuesta-footer {
+.actions-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  border-top: 1px solid #e0e0e0;
-  background-color: #f9fafc;
+  justify-content: center;
+  gap: 10px;
 }
 
-.encuesta-footer .autor {
-  font-size: 0.9rem;
-  color: #607d8b;
-}
-
-.encuesta-footer button {
-  background: #1e88e5;
-  border: none;
-  color: #fff;
-  padding: 0.55rem 1.2rem;
-  border-radius: 8px;
-  font-size: 0.9rem;
+.btn-editar {
+  background-color: #1E88E5 !important; /* Azul */
+  color: white !important;
   font-weight: 500;
-  cursor: pointer;
-  transition: background 0.25s ease, transform 0.15s ease;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
 }
 
-.encuesta-footer button:hover {
-  background: #1565c0;
-  transform: scale(1.05);
+.btn-editar:hover {
+  background-color: #1565C0 !important;
 }
 
-/* ======== ANIMACIÓN DE ENTRADA ======== */
-.encuesta-card {
-  opacity: 0;
-  animation: fadeInUp 0.6s ease forwards;
+.btn-eliminar {
+  background-color: #E53935 !important; /* Rojo */
+  color: white !important;
+  font-weight: 500;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ======== RESPONSIVE ======== */
-@media (max-width: 768px) {
-  .encuestas-container {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
-
-  .encuesta-card {
-    border-radius: 12px;
-  }
-
-  .encuesta-header {
-    font-size: 1.1rem;
-  }
+.btn-eliminar:hover {
+  background-color: #B71C1C !important;
 }

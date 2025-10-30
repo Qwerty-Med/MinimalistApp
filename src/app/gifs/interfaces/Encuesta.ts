@@ -4,7 +4,7 @@ import { Estudiante } from "./Estudiante";
 
 export interface Encuesta {
   id: number;
-  titulo: string;
-  estudiante?: Estudiante;
-  comentarios?: Comentario[];
+  nombre: string;
+  estudiante?: string;
+  comentarios?: string;
 }

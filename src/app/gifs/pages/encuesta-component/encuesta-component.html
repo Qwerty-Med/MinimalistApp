@@ -1,101 +1,99 @@
 <mat-card class="soft-orange-card">
-    <h1 class="alinear">Listado de Estudiantes</h1>
+    <h1 class="alinear">Listado de Encuestas</h1>
+    <mat-card-header>
+        <div>
+            <mat-form-field hintLabel="Busque Encuestas" appearance="fill">
+                <mat-label>Buscar Encuestas</mat-label>
+                <input matInput #input (keyup)="buscar(input.value)">
+            </mat-form-field>
+        </div>
+    </mat-card-header>
 
-  <!-- Buscador -->
-  <div class="flex justify-between mb-4">
-   <mat-card-header>
+    <mat-card-header>
+        <div class="right p-2">
+            <ul>
+                <li>
+                    <button mat-raised-button color="primary" (click)="openProductDialog()">Agregar Evaluacion</button>
+                </li>
+            </ul>
+        </div>
+    </mat-card-header>
 
+    <div mat-card-image></div>
 
-  <div>
+    <mat-card-content>
+
+    
+
+        <table mat-table [dataSource]="dataSource">
+            <!--id column-->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef>Nº</th>
+                <td mat-cell *matCellDef="let element"> {{element.id}}</td>
+            </ng-container>
+
+            <!--id name-->
+            <ng-container matColumnDef="titulo">
+                <th mat-header-cell *matHeaderCellDef>Titulo</th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}}</td>
+            </ng-container>
+
+             <ng-container matColumnDef="estudiante">
+                <th mat-header-cell *matHeaderCellDef>Estudiante</th>
+                <td mat-cell *matCellDef="let element"> {{element.estudiante}}</td>
+            </ng-container>
+
+                       <!--id name-->
+            <ng-container matColumnDef="comentarios">
+                <th mat-header-cell *matHeaderCellDef>Comentarios</th>
+                <td mat-cell *matCellDef="let element"> {{element.comentarios}}</td>
+            </ng-container>
+
             
 
-      <mat-form-field hintLabel="Busque productos" appearance="fill">
-               <mat-label>Buscar Estudiante</mat-label>
-      <input
-        matInput
-        placeholder="Ingrese título o palabra clave"
-        [(ngModel)]="searchTerm"
-      />
+         
+ 
+
+            <!--actions-->
+<ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef class="mat-column-actions">
+    Acciones
+  </th>
+  <td mat-cell *matCellDef="let element" class="mat-column-actions">
+    <div class="actions-container">
       <button
-        *ngIf="searchTerm"
-        matSuffix
-        mat-icon-button
-        aria-label="Clear"
-        (click)="searchTerm = ''"
+        mat-raised-button
+        class="btn-editar"
+        (click)="edit(
+          element.id,
+          element.nombre,
+          element.estudiante,
+          element.comentarios
+        )"
       >
-        <mat-icon>close</mat-icon>
+        Editar
       </button>
- </mat-form-field>
-      </div>
-</mat-card-header>
 
-    <button
-      mat-flat-button
-      color="primary"
-      class="rounded-lg"
-      (click)="reloadEncuestas()"
-    >
-      <mat-icon>refresh</mat-icon>
-      Actualizar
-    </button>
-  </div>
-<mat-card-content>
-  <!-- Tabla de encuestas -->
-  <div class="overflow-x-auto">
-    <table mat-table [dataSource]="filteredEncuestas()" class="w-full mat-elevation-z8">
+      <button
+        mat-raised-button
+        class="btn-eliminar"
+        (click)="delete(element.id)"
+      >
+        Eliminar
+      </button>
+    </div>
+  </td>
+</ng-container>
 
-      <!-- Columna: Título -->
-      <ng-container matColumnDef="titulo">
-        <th mat-header-cell *matHeaderCellDef>Título</th>
-        <td mat-cell *matCellDef="let encuesta">
-          {{ encuesta.titulo }}
-        </td>
-      </ng-container>
 
-      <!-- Columna: Estudiante -->
-      <ng-container matColumnDef="estudiante">
-        <th mat-header-cell *matHeaderCellDef>Estudiante</th>
-        <td mat-cell *matCellDef="let encuesta">
-          {{ encuesta.estudiante?.nombre }} {{ encuesta.estudiante?.primerApellido }}
-        </td>
-      </ng-container>
 
-      <!-- Columna: Directiva -->
-      <ng-container matColumnDef="directiva">
-        <th mat-header-cell *matHeaderCellDef>Directiva</th>
-        <td mat-cell *matCellDef="let encuesta">
-          {{ encuesta.directiva?.cargo }}
-        </td>
-      </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
-      <!-- Columna: Acciones -->
-      <ng-container matColumnDef="acciones">
-        <th mat-header-cell *matHeaderCellDef>Acciones</th>
-        <td mat-cell *matCellDef="let encuesta">
-          <button
-            mat-stroked-button
-            color="accent"
-            (click)="verDetalles(encuesta)"
-          >
-            <mat-icon>visibility</mat-icon>
-            Ver
-          </button>
-        </td>
-      </ng-container>
+        </table>
 
-      <!-- Header y filas -->
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr
-        mat-row
-        *matRowDef="let row; columns: displayedColumns"
-        class="hover:bg-gray-100 transition"
-      ></tr>
-    </table>
-  </div>
+        <mat-paginator [pageSizeOptions]="[5,10,20]" showFirstLastButtons=""></mat-paginator>
 
-  <!-- Si no hay encuestas -->
-  <div *ngIf="filteredEncuestas().length === 0" class="text-center text-gray-500 mt-4">
-    <mat-icon>info</mat-icon> No hay encuestas disponibles.
-  </div>
-  </mat-card-content>
+    </mat-card-content>
+
 </mat-card>

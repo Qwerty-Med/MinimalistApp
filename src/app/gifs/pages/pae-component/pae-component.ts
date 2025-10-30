@@ -16,6 +16,9 @@ import { Profesor } from '../../interfaces/Profesor';
 import { ProfesorService } from '../../services/profesores-service';
 import { EditProfesorComponent } from '../profesorpage/profesor-edit/edit-profesor.component';
 import { PaeService } from '../../services/pae-service';
+import { PAE } from '../../interfaces/PAE';
+import { EditComponent } from './edit-component/edit-component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-pae-component',
@@ -38,20 +41,15 @@ import { PaeService } from '../../services/pae-service';
 })
 export class PaeComponent implements OnInit {
 
-  listaProfesores: Profesor[] = [];
+  listaProfesores: PAE[] = [];
 
   private profesorService = inject(PaeService);
   private snackBar = inject(MatSnackBar);
   private dialog = inject(MatDialog);
 
-  displayedColumns: string[] = [
-    'id',
-    'estado',
-    'estudiante',
-    'actions'
-  ];
+displayedColumns: string[] = ['id', 'nombre', 'estudiante','actions'];
 
-  dataSource = new MatTableDataSource<Profesor>();
+  dataSource = new MatTableDataSource<PAE>();
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -59,56 +57,60 @@ export class PaeComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.getProfesores();
+    this.getProducts();
+    console.log('this data')
   }
 
-  getProfesores() {
-    this.profesorService.getProfesores().subscribe({
-      next: (data: any) => this.processProfesoresResponse(data),
-      error: (error: any) => console.log("Error obteniendo profesores: ", error)
-    });
+  getProducts() {
+    this.profesorService.getProfesores().subscribe((data: any) => {
+      console.log('this data', data)
+      this.processProfesoresResponse(data);
+    }, (error: any) => {
+      console.log("error in products: ", error);
+    })
   }
+
 
   processProfesoresResponse(resp: any) {
-    const dataProfesores: Profesor[] = [];
+    const dataProfesores: PAE[] = [];
     let listProfesores = resp;
 
-    listProfesores.forEach((element: Profesor) => {
+    listProfesores.forEach((element: PAE) => {
       dataProfesores.push(element);
     });
 
     this.listaProfesores = dataProfesores;
 
     // set the datasource
-    this.dataSource = new MatTableDataSource<Profesor>(dataProfesores);
+    this.dataSource = new MatTableDataSource<PAE>(dataProfesores);
     this.dataSource.paginator = this.paginator;
   }
 
   openProfesorDialog() {
-    const dialogRef = this.dialog.open(EditProfesorComponent, {
+    const dialogRef = this.dialog.open(EditComponent, {
       width: '450px'
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result === 1) {
-        this.openSnackBar("Profesor agregado exitosamente", "Éxito");
-        this.getProfesores();
+        this.openSnackBar("PAE agregado exitosamente", "Éxito");
+        this.getProducts();
       } else if (result === 2) {
-        this.openSnackBar("Error al agregar el profesor", "Error");
+        this.openSnackBar("Error al agregar el PAE", "Error");
       }
     });
   }
 
   edit(
     id: number,
-    estado: string,
+    nombre: string,
     estudiante: string,
   ) {
-    const dialogRef = this.dialog.open(EditProfesorComponent, {
+    const dialogRef = this.dialog.open(EditComponent, {
       width: '450px',
       data: {
         id: id,
-        estado: estado,
+        nombre: nombre,
         estudiante: estudiante,
       }
     });
@@ -116,7 +118,7 @@ export class PaeComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result === 1) {
         this.openSnackBar("Profesor actualizado exitosamente", "Éxito");
-        this.getProfesores();
+        this.getProducts();
       } else if (result === 2) {
         this.openSnackBar("Error al actualizar el profesor", "Error");
       }
@@ -127,7 +129,7 @@ export class PaeComponent implements OnInit {
     console.log('Buscando término:', termino);
 
     if (termino.length === 0) {
-      return this.getProfesores();
+      return this.getProducts();
     }
 
     this.profesorService.getProfesoresByName(termino).subscribe({
@@ -139,24 +141,43 @@ export class PaeComponent implements OnInit {
     });
   }
 
-  delete(id: number) {
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: '450px',
-      data: { id: id, module: "profesor" }
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result === 1) {
-        this.profesorService.deleteProfesores(id).subscribe({
-          next: () => {
-            this.openSnackBar("Profesor eliminado exitosamente", "Éxito");
-            this.getProfesores();
-          },
-          error: () => this.openSnackBar("Error al eliminar el profesor", "Error")
-        });
-      }
-    });
-  }
+ delete(id: number): void {
+   Swal.fire({
+     title: '¿Estás seguro?',
+     text: 'No podrás revertir esta acción',
+     icon: 'warning',
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Sí, eliminar',
+     cancelButtonText: 'Cancelar'
+   }).then((result) => {
+     if (result.isConfirmed) {
+       this.profesorService.deleteProfesores(id).subscribe({
+         next: () => {
+           // Mensaje de éxito
+           Swal.fire({
+             title: 'Eliminado',
+             text: 'La Materia fue eliminado correctamente.',
+             icon: 'success',
+             timer: 2000,
+             showConfirmButton: false
+           });
+ 
+           // Recargar la lista
+           this.getProducts();
+         },
+         error: () => {
+           Swal.fire({
+             title: 'Error',
+             text: 'No se pudo eliminar la materia.',
+             icon: 'error'
+           });
+         }
+       });
+     }
+   });
+ }
 
   openSnackBar(message: string, action: string): MatSnackBarRef<SimpleSnackBar> {
     return this.snackBar.open(message, action, {

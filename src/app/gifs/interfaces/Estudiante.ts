@@ -7,7 +7,8 @@ export interface Estudiante {
   primerApellido: string;
   segundoApellido: string;
   telefono:string;
-  direccion:string
-  correo:string
+  direccion:string;
+  correo:string;
+  materias:string;
   pae?: boolean; // Programa de Acompañamiento Estudiantil
 }

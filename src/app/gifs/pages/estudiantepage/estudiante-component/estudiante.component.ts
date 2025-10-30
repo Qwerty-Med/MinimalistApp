@@ -95,6 +95,7 @@ export class EstudianteComponent implements OnInit {
   console.log("📤 Enviando JSON:", data);
 
   if (this.data) {
+    console.log("📤 XXXXXXXX:", data);
     this.productService.updateProduct(data, this.data.id).subscribe({
       next: () => this.dialogRef.close(1),
       error: (err) => {
@@ -125,6 +126,7 @@ export class EstudianteComponent implements OnInit {
    
 
   updateForm(data: any) {
+    console.log('ESTO LLEGA', this.data)
     this.productForm = this.fb.group({
       nombre: [data.nombre, Validators.required],
       primerApellido: [data.primerApellido, Validators.required],

@@ -17,17 +17,12 @@ import { ConfirmComponent } from '../../componets/confirm/confirm.component';
 import { Estudiante } from '../../interfaces/Estudiante';
 import { EstudianteComponent } from '../estudiantepage/estudiante-component/estudiante.component';
 import { EditComponent } from './edit-component/edit-component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-encuesta-component',
   imports: [
-    FormsModule,
-    MatTableModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MaterialModule,
-     CommonModule,
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
@@ -44,35 +39,174 @@ import { EditComponent } from './edit-component/edit-component';
   templateUrl: './encuesta-component.html',
   styleUrl: './encuesta-component.css'
 })  
-export class EncuestaComponent implements OnInit {
-  encuestas: any[] = [];
-  searchTerm: string = '';
-  displayedColumns: string[] = ['titulo', 'estudiante', 'directiva', 'acciones'];
+export class EncuestaComponent  implements OnInit {
 
-  constructor(private encuestaService: EncuestaService) {}
+ 
+  listaEstudiante: Encuesta[] = [];
+
+  private productService = inject(EncuestaService);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
+
+  constructor() { }
 
   ngOnInit(): void {
-    this.cargarEncuestas();
+    this.getProducts();
   }
 
-  cargarEncuestas() {
-    this.encuestaService.getEncuestas().subscribe((data) => {
-      this.encuestas = data;
+  displayedColumns: string[] = ['id', 'titulo', 'estudiante','comentarios', 'actions'];
+  dataSource = new MatTableDataSource<Encuesta>
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+
+  getProducts() {
+    this.productService.getEncuestas().subscribe((data: any) => {
+      this.processCategoriesResponse(data);
+    }, (error: any) => {
+      console.log("error in products: ", error);
+    })
+  }
+
+
+  processCategoriesResponse(resp: any) {
+    const dataEstudent: Encuesta[] = [];
+    let listEstudent = resp;
+
+    listEstudent.forEach((element: Encuesta) => {
+      //element.category = element.category.name;
+      // element.picture = element.picture ? 'data:image/jpeg;base64,' + element.picture : '';
+      dataEstudent.push(element);
+    });
+
+    this.listaEstudiante = dataEstudent;
+
+    //set the datasource
+    this.dataSource = new MatTableDataSource<Encuesta>(dataEstudent);
+    this.dataSource.paginator = this.paginator;
+
+  }
+
+
+
+  openProductDialog() {
+    const dialogRef = this.dialog.open(EditComponent, {
+      width: '450px'
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+
+      if (result == 1) {
+
+        this.openSnackBar("Producto add", "Exitosa");
+        this.getProducts();
+
+      } else if (result == 2) {
+
+        this.openSnackBar("Se produjo un error al agregar la product", "Error");
+
+      }
+
     });
   }
 
-  reloadEncuestas() {
-    this.cargarEncuestas();
+
+  edit(
+    id: number,
+    nombre: string,
+    estudiante: string,
+    comentarios: string,
+  ) {
+    const dialogRef = this.dialog.open(EditComponent, {
+      width: '450px',
+      data: {
+        id: id,
+        nombre: nombre,
+        estudiante:estudiante,
+        comentarios: comentarios,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result: any) => {
+      if (result === 1) {
+        this.openSnackBar("Estudiante actualizado exitosamente", "Éxito");
+        this.getProducts(); // 🔸 puedes renombrar a getEstudiantes() si corresponde
+      } else if (result === 2) {
+        this.openSnackBar("Se produjo un error al actualizar el estudiante", "Error");
+      }
+    });
   }
 
-  filteredEncuestas() {
-    return this.encuestas.filter(e =>
-      e.titulo.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
+
+
+  buscar(termino: string) {
+
+    console.log('this is termino', termino)
+
+    if (termino.length === 0) {
+      return this.getProducts();
+    }
+    this.productService.getProductsByName(termino).subscribe((data: any) => {
+
+      this.processCategoriesResponse(data);
+      console.log('this is resp', data)
+    })
   }
 
-  verDetalles(encuesta: any) {
-    // Puedes abrir un diálogo o navegar a un detalle
-    console.log('Encuesta seleccionada:', encuesta);
+  delete(id: number): void {
+     Swal.fire({
+       title: '¿Estás seguro?',
+       text: 'No podrás revertir esta acción',
+       icon: 'warning',
+       showCancelButton: true,
+       confirmButtonColor: '#3085d6',
+       cancelButtonColor: '#d33',
+       confirmButtonText: 'Sí, eliminar',
+       cancelButtonText: 'Cancelar'
+     }).then((result) => {
+       if (result.isConfirmed) {
+         this.productService.deleteProduct(id).subscribe({
+           next: () => {
+             // Mensaje de éxito
+             Swal.fire({
+               title: 'Eliminado',
+               text: 'La encuesta fue eliminado correctamente.',
+               icon: 'success',
+               timer: 2000,
+               showConfirmButton: false
+             });
+   
+             // Recargar la lista
+             this.getProducts();
+           },
+           error: () => {
+             Swal.fire({
+               title: 'Error',
+               text: 'No se pudo eliminar la encuesta.',
+               icon: 'error'
+             });
+           }
+         });
+       }
+     });
+   }
+ 
+
+
+
+
+
+  openSnackBar(message: string, action: string): MatSnackBarRef<SimpleSnackBar> {
+    return this.snackBar.open(message, action, {
+      duration: 3000
+    })
+
   }
+
+
+
+
 }
+
+
+

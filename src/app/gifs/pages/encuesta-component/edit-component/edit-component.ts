@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
@@ -19,13 +19,7 @@ import { EstudianteComponent } from '../../estudiantepage/estudiante-component/e
 @Component({
   selector: 'app-edit-component',
   imports: [
-    FormsModule,
-    MatTableModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MaterialModule,
-    CommonModule,
+      CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MaterialModule,
@@ -36,29 +30,92 @@ import { EstudianteComponent } from '../../estudiantepage/estudiante-component/e
     MatSelectModule,
     MatButtonModule,
     MatCardModule,
-    MatSnackBarModule,
-    MatIconModule],
+    MatSnackBarModule,],
   templateUrl: './edit-component.html',
   styleUrl: './edit-component.css'
 })
 export class EditComponent implements OnInit {
-
-
-  listaEstudiante: Encuesta[] = [];
-
   private productService = inject(EncuestaService);
-  private snackBar = inject(MatSnackBar);
-  private dialog = inject(MatDialog);
 
-  constructor() { }
+  selectedFile: any;
+  nameImg: string = "";
+  public productForm!: FormGroup;
+  estadoFormulario: string = "";
+  private fb = inject(FormBuilder);
+
+  private dialogRef = inject(MatDialogRef);
+  public data = inject(MAT_DIALOG_DATA);
 
   ngOnInit(): void {
+    this.estadoFormulario = "Agregar";
+    this.getForm();
+
+
+    if (this.data != null) {
+      this.updateForm(this.data);
+      this.estadoFormulario = "Actualizar";
+    }
+
   }
 
+  
 
+  onCancel() {
+    this.dialogRef.close(3);
+  }
 
+  getForm() {
+    this.productForm = this.fb.group({
+      nombre: ['', Validators.required],
+      estudiante: ['', Validators.required],
+      comentarios: ['', Validators.required],
+    });
+  }
 
+ onSave() {
+  const data = {
+    nombre: this.productForm.get('nombre')?.value,
+    estudiante: this.productForm.get('estudiante')?.value,
+    comentarios: this.productForm.get('comentarios')?.value,
+  };
+
+  console.log("📤 Enviando JSON:", data);
+
+  if (this.data) {
+    console.log("📤 XXXXXXXXXXX", data);
+    this.productService.updateProduct(data, this.data.id).subscribe({
+      next: () => this.dialogRef.close(1),
+      error: (err) => {
+        console.error("❌ Error al actualizar:", err);
+        this.dialogRef.close(2);
+      }
+    });
+  } else {
+    this.productService.saveProducts(data).subscribe({
+      next: (res) => {
+        console.log("✅ Guardado con éxito:", res);
+        this.dialogRef.close(1);
+      },
+      error: (err) => {
+        console.error("❌ Error al guardar:", err);
+        this.dialogRef.close(2);
+      }
+    });
+  }
 }
 
 
+
+   
+
+  updateForm(data: any) {
+    this.productForm = this.fb.group({
+      nombre: [data.nombre, Validators.required],
+      estudiante: [data.estudiante, Validators.required],
+      comentarios: [data.comentarios, Validators.required],
+    });
+  }
+
+
+}
 

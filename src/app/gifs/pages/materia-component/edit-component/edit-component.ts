@@ -68,7 +68,6 @@ export class EditComponent implements OnInit {
       profesor: ['', Validators.required],
       estudiante: ['', Validators.required],
       evaluaciones: ['', Validators.required],
-      directiva: ['', Validators.required],
     });
   }
 
@@ -76,7 +75,6 @@ export class EditComponent implements OnInit {
   const data = {
     nombre: this.productForm.get('nombre')?.value,
     profesor: this.productForm.get('profesor')?.value,
-    segundoApellido: this.productForm.get('segundoApellido')?.value,
     estudiante: this.productForm.get('estudiante')?.value,
     evaluaciones: this.productForm.get('evaluaciones')?.value,
   };
@@ -84,6 +82,7 @@ export class EditComponent implements OnInit {
   console.log("📤 Enviando JSON:", data);
 
   if (this.data) {
+    console.log("📤 XXXXXXXXXXX", data);
     this.productService.updateProduct(data, this.data.id).subscribe({
       next: () => this.dialogRef.close(1),
       error: (err) => {
@@ -106,10 +105,6 @@ export class EditComponent implements OnInit {
 }
 
 
-  onFileChanged(event: any) {
-    this.selectedFile = event.target.files[0];
-    this.nameImg = this.selectedFile.name;
-  }
 
    
 
@@ -119,7 +114,6 @@ export class EditComponent implements OnInit {
       profesor: [data.profesor, Validators.required],
       estudiante: [data.estudiante, Validators.required],
       evaluaciones: [data.evaluaciones, Validators.required],
-      directiva: [data.directiva, Validators.required],
     });
   }
 
