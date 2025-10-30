@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { EstudianteService } from '../../../services/estudiante-service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @Component({
@@ -31,6 +32,7 @@ import { EstudianteService } from '../../../services/estudiante-service';
     MatButtonModule,
     MatCardModule,
     MatSnackBarModule,
+    MatCheckboxModule
   ],
   templateUrl: './estudiante.component.html',
   styleUrl: './estudiante.component.css'
@@ -73,7 +75,8 @@ export class EstudianteComponent implements OnInit {
       telefono: ['', Validators.required],
       direccion: ['', Validators.required],
       correo: ['', Validators.required],
-      pae: null,
+      materias: ['', Validators.required],
+      pae: ['', Validators.required],
     });
   }
 
@@ -85,6 +88,7 @@ export class EstudianteComponent implements OnInit {
     telefono: this.productForm.get('telefono')?.value,
     direccion: this.productForm.get('direccion')?.value,
     correo: this.productForm.get('correo')?.value,
+    materias: this.productForm.get('materias')?.value,
     pae: this.productForm.get('pae')?.value,
   };
 
@@ -128,7 +132,9 @@ export class EstudianteComponent implements OnInit {
       telefono: [data.telefono, Validators.required],
       direccion: [data.direccion, Validators.required],
       correo: [data.correo, Validators.required],
-       pae: [null],
+      materias: [data.materias, Validators.required],
+      pae: [data.pae, Validators.required],
+       
     });
   }
 

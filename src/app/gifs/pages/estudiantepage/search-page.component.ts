@@ -15,6 +15,7 @@ import { ConfirmComponent } from '../../componets/confirm/confirm.component';
 import { EstudianteService } from '../../services/estudiante-service';
 import { EstudianteComponent } from './estudiante-component/estudiante.component';
 import { Estudiante } from '../../interfaces/Estudiante';
+import Swal from 'sweetalert2';
 
 
 
@@ -56,7 +57,7 @@ export default class SearchPageComponent implements OnInit {
     this.getProducts();
   }
 
-  displayedColumns: string[] = ['id', 'nombre', 'primerApellido', 'segundoApellido', 'telefono', 'correo', 'direccion', 'pae', 'picture', 'actions'];
+  displayedColumns: string[] = ['id', 'nombre', 'primerApellido', 'segundoApellido', 'telefono', 'correo', 'direccion', 'pae', 'materias', 'actions'];
   dataSource = new MatTableDataSource<Estudiante>
 
   @ViewChild(MatPaginator)
@@ -121,7 +122,8 @@ export default class SearchPageComponent implements OnInit {
     telefono: number,
     correo: string,
     direccion: string,
-    pae: null,
+    materias: string,
+    pae: boolean,
   ) {
     const dialogRef = this.dialog.open(EstudianteComponent, {
       width: '450px',
@@ -133,6 +135,7 @@ export default class SearchPageComponent implements OnInit {
         telefono: telefono,
         correo: correo,
         direccion: direccion,
+        materias: materias,
         pae: pae,
       }
     });
@@ -163,24 +166,43 @@ export default class SearchPageComponent implements OnInit {
     })
   }
 
-  delete(id: number) {
+delete(id: number): void {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'No podrás revertir esta acción',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.productService.deleteProduct(id).subscribe({
+        next: () => {
+          // Mensaje de éxito
+          Swal.fire({
+            title: 'Eliminado',
+            text: 'El profesor fue eliminado correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
 
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: '450px',
-      data: { id: id, module: "product" }
-    });
-
-    dialogRef.afterClosed().subscribe((result: any) => {
-
-      if (result == 1) {
-        this.openSnackBar("Product Eliminado", "Exitoso");
-        this.getProducts();
-      } else if (result == 2) {
-        this.openSnackBar("Se produjo un error al eliminar la Product", "Error");
-      }
-
-    });
-  }
+          // Recargar la lista
+          this.getProducts();
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo eliminar el profesor.',
+            icon: 'error'
+          });
+        }
+      });
+    }
+  });
+}
 
 
 

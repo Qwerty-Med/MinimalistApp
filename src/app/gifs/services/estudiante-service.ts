@@ -24,6 +24,7 @@ getProducts(): Observable<Estudiante[]> {
 
 saveProducts(body: any): Observable<any> {
    const endpoint = `${base_url}/estudiantes/create`;
+    console.log('ESTOY EN EL SERVICIO', body)
   return this.http.post(endpoint, body)
 }
 

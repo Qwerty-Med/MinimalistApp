@@ -15,10 +15,12 @@ import { ConfirmComponent } from '../../componets/confirm/confirm.component';
 import { Profesor } from '../../interfaces/Profesor';
 import { ProfesorService } from '../../services/profesores-service';
 import { EditProfesorComponent } from './profesor-edit/edit-profesor.component';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-profesor.component',
-    standalone: true,
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -53,7 +55,7 @@ export class ProfesorComponent implements OnInit {
     'telefono',
     'correo',
     'direccion',
-    'picture',
+    'materias',
     'actions'
   ];
 
@@ -113,6 +115,7 @@ export class ProfesorComponent implements OnInit {
     telefono: number,
     correo: string,
     direccion: string,
+    materias: string,
   ) {
     const dialogRef = this.dialog.open(EditProfesorComponent, {
       width: '450px',
@@ -124,6 +127,7 @@ export class ProfesorComponent implements OnInit {
         telefono: telefono,
         correo: correo,
         direccion: direccion,
+        materias: materias,
       }
     });
 
@@ -153,24 +157,44 @@ export class ProfesorComponent implements OnInit {
     });
   }
 
-  delete(id: number) {
-    const dialogRef = this.dialog.open(ConfirmComponent, {
-      width: '450px',
-      data: { id: id, module: "profesor" }
-    });
+delete(id: number): void {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'No podrás revertir esta acción',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      this.profesorService.deleteProfesores(id).subscribe({
+        next: () => {
+          // Mensaje de éxito
+          Swal.fire({
+            title: 'Eliminado',
+            text: 'El profesor fue eliminado correctamente.',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+          });
 
-    dialogRef.afterClosed().subscribe((result: any) => {
-      if (result === 1) {
-        this.profesorService.deleteProfesores(id).subscribe({
-          next: () => {
-            this.openSnackBar("Profesor eliminado exitosamente", "Éxito");
-            this.getProfesores();
-          },
-          error: () => this.openSnackBar("Error al eliminar el profesor", "Error")
-        });
-      }
-    });
-  }
+          // Recargar la lista
+          this.getProfesores();
+        },
+        error: () => {
+          Swal.fire({
+            title: 'Error',
+            text: 'No se pudo eliminar el profesor.',
+            icon: 'error'
+          });
+        }
+      });
+    }
+  });
+}
+
 
   openSnackBar(message: string, action: string): MatSnackBarRef<SimpleSnackBar> {
     return this.snackBar.open(message, action, {

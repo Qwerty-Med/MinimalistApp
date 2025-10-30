@@ -9,5 +9,5 @@ export interface Estudiante {
   telefono:string;
   direccion:string
   correo:string
-  pae?: PAE; // Programa de Acompañamiento Estudiantil
+  pae?: boolean; // Programa de Acompañamiento Estudiantil
 }

@@ -68,12 +68,15 @@
                 <td mat-cell *matCellDef="let element"> {{element.direccion}}</td>
             </ng-container>
 
-            <!-- picture-->
-            <ng-container matColumnDef="picture">
-                <th mat-header-cell *matHeaderCellDef>Foto</th>
-                <td mat-cell *matCellDef="let element"><img [src]="element.picture" width="35" height="35">
-                </td>
+                 <!-- category-->
+            <ng-container matColumnDef="materias">
+                <th mat-header-cell *matHeaderCellDef>Materias</th>
+                <td mat-cell *matCellDef="let element"> {{element.materias}}</td>
             </ng-container>
+
+  
+
+     
 
             <!--actions-->
 <ng-container matColumnDef="actions">
@@ -92,7 +95,8 @@
           element.segundoApellido,
           element.telefono,
           element.correo,
-          element.direccion
+          element.direccion,
+          element.materias
         )"
       >
         Editar

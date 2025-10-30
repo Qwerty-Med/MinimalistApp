@@ -1,4 +1,7 @@
+import { Estudiante } from "./Estudiante";
+
 export interface PAE {
   id: number;
-  estado: string;
+  estado: string;  
+  estudiante: Estudiante[];
 }

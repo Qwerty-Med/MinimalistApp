@@ -69,8 +69,9 @@ export class EditProfesorComponent implements OnInit {
       primerApellido: ['', Validators.required],
       segundoApellido: ['', Validators.required],
       telefono: ['', Validators.required],
-      direccion: ['', Validators.required],
+      direccion: ['', Validators.required],     
       correo: ['', Validators.required],
+      materias: ['', Validators.required],
     });
   }
 
@@ -82,6 +83,7 @@ export class EditProfesorComponent implements OnInit {
     telefono: this.productForm.get('telefono')?.value,
     direccion: this.productForm.get('direccion')?.value,
     correo: this.productForm.get('correo')?.value,
+    materias: this.productForm.get('materias')?.value,
   };
 
   console.log("📤 Enviando JSON:", data);
@@ -91,8 +93,7 @@ export class EditProfesorComponent implements OnInit {
       
       next: () => this.dialogRef.close(1),
       error: (err) => {
-          console.log("📤 Enviando JSON:", data);
-        console.error("❌ Error al actualizar:", err);
+          console.log("📤 EDITANDO", data);
         this.dialogRef.close(2);
       }
     });
@@ -124,8 +125,9 @@ export class EditProfesorComponent implements OnInit {
       primerApellido: [data.primerApellido, Validators.required],
       segundoApellido: [data.segundoApellido, Validators.required],
       telefono: [data.telefono, Validators.required],
-      direccion: [data.direccion, Validators.required],
+      direccion: [data.direccion, Validators.required], 
       correo: [data.correo, Validators.required],
+      materias: [data.materias, Validators.required],
     });
   }
 

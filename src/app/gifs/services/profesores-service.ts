@@ -24,10 +24,8 @@ export class ProfesorService {
    * save the products
    */
 saveProfesores(body: any): Observable<any> {
-  const endpoint = `${base_url}/profesores/create`;
-  return this.http.post(endpoint, body, {
-    headers: { 'Content-Type': 'application/json' }
-  });
+  const endpoint = `${base_url}/profesores/create`; 
+   return this.http.post(endpoint, body)
 }
 
 
@@ -61,7 +59,7 @@ saveProfesores(body: any): Observable<any> {
    * get by name products
    */
   getProfesoresByName(name: any) {
-    const endpoint = `${base_url}/profesores/for/${name}`;
+    const endpoint = `${base_url}/profesores/term/${name}`;
     return this.http.get(endpoint);
   }
 
