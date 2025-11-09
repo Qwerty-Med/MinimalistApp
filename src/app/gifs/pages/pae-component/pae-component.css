@@ -34,7 +34,7 @@ mat-form-field {
   }
 
   .soft-orange-card {
-background: linear-gradient(145deg, #81acc0ff, #1d74f5ff);
+    background-color: rgba(245, 191, 229, 0.95);
   color: #0a0302ff;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(12, 12, 11, 0.25);

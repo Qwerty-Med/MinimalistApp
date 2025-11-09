@@ -1,35 +1,57 @@
-<!-- guia-cvo-welcome.component.html -->
-<mat-card class="welcome-card">
-  <mat-card-header>
-    <mat-card-title class="title">
-      Bienvenido a <span class="highlight">GuíaCVO</span>!
-    </mat-card-title>
-    <mat-card-subtitle>
-      Tu guía completa para el aprendizaje y seguimiento académico.
-    </mat-card-subtitle>
-  </mat-card-header>
+<mat-card class="soft-orange-card centered-card">
+  <div class="page">
+    <h1 class="title">Sugerencias para redactar tu carta</h1>
+    <br>
+    <br><br>
+    <div class="container">
+      <div class="left">
+        <mat-card class="suggestion">
+          <div class="suggestion-inner">
+            <div class="suggest-text">Inicia tu mensaje con un saludo cordial.</div>
+            <button class="heart-toggle1" matButton="filled" disabled>
+              <i class="fa-solid fa-heart"></i>
+            </button>
+          </div>
+        </mat-card>
 
-  <mat-card-content>
-    <p class="welcome-text">
-      Explora recursos, administra tus materias y mantente al día con tus evaluaciones. 
-      Todo en un solo lugar.
-    </p>
-    <div class="actions-container" style="margin-top: 30px;">
-      <!-- Imagen Materias -->
-      <a routerLink="/materias" class="icon-link">
-        <img src="https://img.icons8.com/color/96/000000/books.png" alt="Materias" style="width: 80px; height: 80px;">
-       
-      </a>
+        <mat-card class="suggestion">
+          <div class="suggestion-inner">
+            <div class="suggest-text">Respeta la postura de los miembros de la institución.</div>
+            <button class="heart-toggle1" matButton="filled" disabled>
+              <i class="fa-solid fa-heart"></i>
+            </button>
+          </div>
+        </mat-card>
 
-      <!-- Imagen PAE -->
-      <a routerLink="/pae" class="icon-link">
-        <img src="https://img.icons8.com/color/96/000000/school.png" alt="PAE" style="width: 80px; height: 80px;">
-        
-      </a>
+        <mat-card class="suggestion">
+          <div class="suggestion-inner">
+            <div class="suggest-text">Procura ser breve y conciso en tu escrito.</div>
+            <button class="heart-toggle1" matButton="filled" disabled>
+              <i class="fa-solid fa-heart"></i>
+            </button>
+          </div>
+        </mat-card>
+      </div>
+      <form [formGroup]="productForm">
+        <div class="right">
+          <div class="bubble">
+            <div class="bubble-content">
+              <label class="bubble-title">Escribe tu carta<br />aquí:</label>
+              <mat-form-field appearance="outline" class="textarea-field">
+                <textarea matInput placeholder="Redacta tu carta..." rows="8" formControlName="contenido" required ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      <div class="boton">
+        <div class="right">
+          <button mat-button color="primary" mat-raised-button (click)="onSave()">Enviar</button>
+        </div>
+      </div>
+
     </div>
-  </mat-card-content>
 
-  <mat-card-footer class="footer">
-    <small>© 2025 GuíaCVO. Todos los derechos reservados.</small>
-  </mat-card-footer>
+  </div>
 </mat-card>

@@ -12,17 +12,10 @@ export const routes: Routes = [
           import('./gifs/pages/trending-page/trending-page.component'),
       },
       {
-        path: 'administracion',
+        path: 'coment',
         loadComponent: () =>
           import('./gifs/pages/directiva-component/directiva-component').then(m => m.DirectivaComponent),
-        children: [
-          {
-            path: 'profesor',
-            loadComponent: () =>
-              import('./gifs/pages/profesorpage/profesor-edit/edit-profesor.component')
-                .then(m => m.EditProfesorComponent),
-          }
-        ]
+
       },
       {
         path: 'profesores',
@@ -100,6 +93,12 @@ export const routes: Routes = [
                 .then(m => m.EditComponent),
           }
         ]
+      },
+      {
+        path: 'comentarios',
+        loadComponent: () =>
+          import('./gifs/pages/comentarios-component/comentarios-component')
+            .then(m => m.ComentariosComponent),
       },
 
       {

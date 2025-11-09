@@ -24,10 +24,17 @@ export class GifsSideMenuOptionsComponent {
       route: '/dashboard/trending',
     },
     {
-      icon: 'fa-solid fa-user-tie',
-      label: 'Directiva',
+      icon: 'fa-solid fa-envelope',
+      label: 'Escribe Tu Carta',
       subLabel: 'Administracion',
-      route: '/dashboard/administracion',
+      route: '/dashboard/coment',
+    }, 
+
+    {
+      icon: 'fa-solid fa-user-tie',
+      label: 'Comentarios',
+      subLabel: 'Comentario',
+      route: '/dashboard/comentarios',
     },
 
     {
@@ -42,7 +49,7 @@ export class GifsSideMenuOptionsComponent {
       subLabel: 'Estudiante',
       route: '/dashboard/estudiantes',
     },
-     {
+    {
       icon: 'fa-solid fa-users',
       label: 'Materia',
       subLabel: 'Estudiante',
